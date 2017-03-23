@@ -5,7 +5,7 @@
 #include <sstream>
 using namespace std;
 
-bool isTLS(const string& str);
+bool isSSL(const string& str1, const string& str2);
 
 int main(){
 	ifstream inFile;
@@ -61,9 +61,8 @@ int main(){
 		first += "-" + third + "-" + fifth + "-" + seventh;
 		second += "-" + fourth + "-" + sixth;
 
-		if(inFile.good() && !isTLS(second))
-			if(isTLS(first))
-				++numIPs;
+		if(inFile.good() && isSSL(first, second))
+			++numIPs;
 	}
 
 	cout << numIPs << endl;
@@ -71,19 +70,26 @@ int main(){
 	return 0;
 }
 
-bool isTLS(const string& str){
+bool isSSL(const string& str1, const string& str2){
 	bool success = false;
-	int strlen = str.length() - 3;
-	char cmp[3];
+	int str1len = str1.length() - 2;
+	int str2len = str2.length() - 2;
+	char substr1[4], substr2[4];
+	substr1[3] = substr2[3] = '\0';
 	
-	cmp[2] = '\0';
+	for(int i = 0; i < str1len; ++i){
+		substr1[0] = str1.at(i);
+		substr1[1] = str1.at(i+1);
+		substr1[2] = str1.at(i+2);
 
-	for(int i = 0; i < strlen; ++i){
-		cmp[1] = str.at(i+2);
-		cmp[0] = str.at(i+3);
+		if(substr1[0] == substr1[2] && substr1[0] != substr1[1]){
+			substr2[0] = substr2[2] = substr1[1];
+			substr2[1] = substr1[0];
 
-		if(cmp[1] != cmp[0] && strcmp(str.substr(i,2).c_str(), cmp) == 0)
-			success = true;
+			for(int i = 0; i < str2len; ++i)
+				if(strcmp(str2.substr(i,3).c_str(), substr2) == 0)
+					success = true;
+		}
 	}
 
 	return success;
