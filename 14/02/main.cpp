@@ -4,7 +4,8 @@
 #include <string>
 using namespace std;
 
-const string DOOR_ID = "jlmsuwbz";
+//const string DOOR_ID = "jlmsuwbz";
+const string DOOR_ID = "abc"; //test data
 
 char* getMD5(char mdStr[33], unsigned long i){
 	string index;
@@ -54,7 +55,6 @@ bool find5tuplet(char emDee[33], char check, unsigned long j, unsigned long& q){
 	//printf("%c\n",check);
 	for(unsigned short k = 1; k < 1001; ++k){
 		myMD = getMD5(emDee,j+k);
-		//puts(myMD);
 
 		for(unsigned char i = 0; i < 28; ++i)
 			if(check == myMD[i] && check == myMD[i+1] && check == myMD[i+2] && 
@@ -62,9 +62,11 @@ bool find5tuplet(char emDee[33], char check, unsigned long j, unsigned long& q){
 				//puts(myMD);
 				//puts("");
 				q = j + k;
+				//printf("%lu\n%lu\n", j, q);
 				return true;
 			}
 	}
+	//puts(myMD);
 
 	return false;
 }
@@ -89,6 +91,7 @@ int main(){
 	while(count < 64){
 		findTriplet(getMD5(mds, it), count, it, iq);
 		++it;
+		//printf("%lu\n", iq);
 	}
 	printf("%lu\n", iq);
 
